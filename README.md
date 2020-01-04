@@ -1,7 +1,7 @@
 # Project Winter Multi-Hack
 ![Imgur](https://i.imgur.com/ro1PB66.jpg)
 
-In most modern Unity games, the original C# Mono code is converted to C++ using their Il2Cpp tooling. While this brings a major boost in performance, it also means that reverse engineering these games became less noob-friendly. I made this project as a proof of concept and because I wanted to learn from it.
+In most modern Unity games, the original C# Mono code is converted to C++ using their Il2Cpp tooling. While this brings a major boost in performance, it also means that reverse engineering these games became less noob-friendly. I made this project as a proof of concept and because I wanted to learn from it. The code is far from perfect, but it's clean enough for you guys to learn from it aswell.
 
 ## Disclaimer
 **This code is released for educational purpose only. It was made for fun during the holidays and I don't plan on updating it, it's easy enough to update the offsets. The code is pretty straight forward and I encourage you to use it to learn how to create hacks for Il2Cpp games and thus improving your reverse engineering skills.**
