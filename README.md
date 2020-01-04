@@ -16,6 +16,10 @@ In most modern Unity games, the original C# Mono code is converted to C++ using 
 * Role Swapping
 * Progression Rewards Fully Unlocked
 
+## Usage
+* Inject after reaching main menu
+* Press H while in a game to see cheat options
+
 ## Download
 You can find the most recent releases here: LINK
 
