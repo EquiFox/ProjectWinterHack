@@ -15,6 +15,7 @@ In most modern Unity games, the original C# Mono code is converted to C++ using 
 * Free Crafting
 * Role Swapping
 * Progression Rewards Fully Unlocked
+* Every game gives you 10 000 SP
 
 ## Usage
 * Inject after reaching main menu
