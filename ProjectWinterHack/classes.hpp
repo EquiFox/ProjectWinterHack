@@ -27,22 +27,28 @@ enum class ePlayerRole : int
     Defector = 1,
     Investigator = 2,
     TreasureHunter = 3,
-    Medic = 4,
+    Medic_S = 4,
     Soldier = 5,
     Medium = 6,
     Padre = 7,
     Hunter = 8,
-    ClassicSurvivor = 9,
+    Hacker_S = 9,
+    Lumberjack = 10,
+    Scientist_S = 11,
+    ClassicSurvivor = 12,
     ClassicTraitor = 1000,
     Saboteur = 1001,
     Peeker = 1002,
     Looter = 1003,
-    Stitcher = 1004,
-    Hacker = 1005,
+    Medic_T = 1004,
+    Hacker_T = 1005,
     Demon = 1006,
     Whisperer = 1007,
+    Sleeper = 1008,
+    Scientist_T = 1009,
     Yeti = 2000,
-    None = 2002
+    IdentityThief = 2001,
+    None = 10000
 };
 
 struct Il2CppString
@@ -56,12 +62,12 @@ struct Il2CppString
 
     static Il2CppString* New(const char* str)
     {
-        return Utilities::FindFunction<il2cpp_string_new>(0x89EC0)(str);
+        return Utilities::FindFunction<il2cpp_string_new>(0x197200)(str);
     }
 
     static Il2CppString* Concat(Il2CppString* str0, Il2CppString* str1)
     {
-        return Utilities::FindFunction<Il2CppString__Concat>(0xC47430)(str0, str1);
+        return Utilities::FindFunction<Il2CppString__Concat>(0x2001930)(str0, str1);
     }
 };
 
@@ -151,8 +157,8 @@ struct BaseStatScript
     char pad_0[0x20];
     ObscuredFloat maxValue; // 0x20
     ObscuredFloat startValue; // 0x38
-    char pad_1[0x20];
-    ObscuredFloat currentValue; // 0x70
+    char pad_1[0x38];
+    ObscuredFloat currentValue; // 0x88
 };
 
 struct TextMeshProUGUI
@@ -166,17 +172,17 @@ struct TextMeshProUGUI
     
     void SetText(Il2CppString* text)
     {		
-        Utilities::FindFunction<TextMeshProUGUI__SetText>(0x3D1BC0)((DWORD64*)&pad_0, text);
+        Utilities::FindFunction<TextMeshProUGUI__SetText>(0x7AEBD0)((DWORD64*)&pad_0, text);
     }
 
     void SetFaceColor(Color32 newColor)
     {
-        Utilities::FindFunction<TextMeshProUGUI__SetFaceColor>(0xF5B4F0)((DWORD64*)&pad_0, newColor);
+        Utilities::FindFunction<TextMeshProUGUI__SetFaceColor>(0x2C0C5B0)((DWORD64*)&pad_0, newColor);
     }
 
     void SetAllDirty()
     {
-        Utilities::FindFunction<TextMeshProUGUI__SetAllDirty>(0x7CB900)((DWORD64*)&pad_0);
+        Utilities::FindFunction<TextMeshProUGUI__SetAllDirty>(0x1578410)((DWORD64*)&pad_0);
     }
 };
 
@@ -188,15 +194,15 @@ struct PlayerHoverUIHandler
 
 struct TextChatBox
 {
-    char pad_0[0xE8];
-    Il2CppString* localPlayerName; // 0xE8
+    char pad_0[0xE0];
+    Il2CppString* localPlayerName; // 0xE0
 
     typedef void __fastcall TextChat__DisplayLocalMessage(DWORD64* textChat, Il2CppString* message);
 
     void DisplayLocalMessage(const char* message)
     {
         Il2CppString* messageString = Il2CppString::New(message);
-        Utilities::FindFunction<TextChat__DisplayLocalMessage>(0x14A8340)((DWORD64*)&pad_0, messageString);
+        Utilities::FindFunction<TextChat__DisplayLocalMessage>(0x8522A0)((DWORD64*)&pad_0, messageString);
     }
 };
 
@@ -231,18 +237,17 @@ struct CraftingUI
 
 struct HudManager
 {
-    char pad_0[0x80];
-    TextChatBox* textChatBox; // 0x80;
+    char pad_0[0x88];
+    TextChatBox* textChatBox; // 0x88;
     char pad_1[0x10];
-    CraftingUI* craftingUI; // 0x98
+    CraftingUI* craftingUI; // 0xA0
 };
 
 struct PlayerRoleData
 {
     char pad_0[0x18];
     ePlayerRole playerRole; //0x18
-    int oppositeClassEquivalent; //0x1C
-    bool isTraitorRole; //0x20
+    bool isTraitorRole; //0x1C
 
     Il2CppString* GetPlayerRoleString()
     {
@@ -251,19 +256,25 @@ struct PlayerRoleData
             { ePlayerRole::ClassicTraitor, Il2CppString::New(" [Traitor]") },
             { ePlayerRole::Defector, Il2CppString::New(" [Defector]") },
             { ePlayerRole::Demon, Il2CppString::New(" [Demon]") },
-            { ePlayerRole::Hacker, Il2CppString::New(" [Hacker]") },
+            { ePlayerRole::Hacker_S, Il2CppString::New(" [Hacker]") },
+            { ePlayerRole::Hacker_T, Il2CppString::New(" [Hacker]") },
             { ePlayerRole::Hunter, Il2CppString::New(" [Hunter]") },
+            { ePlayerRole::IdentityThief, Il2CppString::New(" [ID Thief]") },
             { ePlayerRole::Innocent, Il2CppString::New(" [Innocent]") },
             { ePlayerRole::Investigator, Il2CppString::New(" [Investigator]") },
             { ePlayerRole::Looter, Il2CppString::New(" [Looter]") },
-            { ePlayerRole::Medic, Il2CppString::New(" [Medic]") },
+            { ePlayerRole::Lumberjack, Il2CppString::New(" [Lumberjack]") },
+            { ePlayerRole::Medic_S, Il2CppString::New(" [Medic]") },
+            { ePlayerRole::Medic_T, Il2CppString::New(" [Medic]") },
             { ePlayerRole::Medium, Il2CppString::New(" [Medium]") },
             { ePlayerRole::None, Il2CppString::New(" [Unknown]") },
             { ePlayerRole::Padre, Il2CppString::New(" [Padre]") },
             { ePlayerRole::Peeker, Il2CppString::New(" [Peeker]") },
             { ePlayerRole::Saboteur, Il2CppString::New(" [Saboteur]") },
+            { ePlayerRole::Scientist_S, Il2CppString::New(" [Scientist]") },
+            { ePlayerRole::Scientist_T, Il2CppString::New(" [Scientist]") },
+            { ePlayerRole::Sleeper, Il2CppString::New(" [Sleeper]") },
             { ePlayerRole::Soldier, Il2CppString::New(" [Soldier]") },
-            { ePlayerRole::Stitcher, Il2CppString::New(" [Stitcher]") },
             { ePlayerRole::TreasureHunter, Il2CppString::New("Treasure Hunter]") },
             { ePlayerRole::Whisperer, Il2CppString::New(" [Whisperer]") },
             { ePlayerRole::Yeti, Il2CppString::New(" [Yeti]") }
@@ -281,53 +292,24 @@ struct PlayerRoleHandler
 
 struct PlayerHandler
 {
-    char pad_0[0x20];
-    bool originalOwner; // 0x20
-    char pad_1[0x3];
-    int currentPlayerOutfitOwnerId; // 0x24
-    char pad_2[0x70];
-    PlayerHoverUIHandler* playerHoverUIHandler; // 0x98
-    char pad_3[0x20];
-    BaseStatScript* healthScript; // 0xC0
-    BaseStatScript* warmthScript; // 0xC8
-    BaseStatScript* hungerScript; // 0xD0
-    char pad_4[0x8];
-    HudManager* hudManager; // 0xE0
-    char pad_5[0x80];
-    DWORD64* playerNameOverride; // 0x168
-    DWORD64* playerName; // 0x170
-    bool isInCabin; // 0x178
-    bool isInRestrictedItemZone; // 0x179
-    bool isUsingMainCamera; // 0x17A
-    bool isInFlagArea; // 0x17B
-    char pad_6[0x4];
-    DWORD64* cameraTarget; //0x180
-    ePlayerClass playerClass; // 0x188
-    bool isRevealed; // 0x18C
-    char pad_7[0x3];
-    PlayerRoleHandler* playerRoleHandler; // 0x190
-    int playerState; // 0x198
-    bool shouldRespawnInCabin; // 0x19C
-    bool haveClothesBeenSwapped; // 0x19D
-    char pad_8[0x2];
-    Il2CppString* playFabID; // 0x1A0
-    char pad_9[0xE8];
-    DWORD64* currentHealth; // 0x290
-    char pad_10[0x10];
-    DWORD64* currentHunger; // 0x2A8
-    char pad_11[0x10];
-    DWORD64* currentWarmth; // 0x2C0
-    char pad_12[0x10];
-    float dragBreakForce; // 0x2D8
-    UnityVector3 lastPosition; // 0x2DC
-    char pad_13[0x21];
-    bool isConvertedTraitor; // 0x309
+    char pad_0[0xA8];
+    PlayerHoverUIHandler* playerHoverUIHandler; // 0xA8
+    char pad_1[0x28];
+    BaseStatScript* healthScript; // 0xD8
+    BaseStatScript* warmthScript; // 0xE0
+    BaseStatScript* hungerScript; // 0xE8
+    char pad_2[0x8];
+    HudManager* hudManager; // 0xF8
+    char pad_3[0xB0];
+    PlayerRoleHandler* playerRoleHandler; // 0x1B0
+    char pad_4[0x171];
+    bool isConvertedTraitor; // 0x329
 
-    typedef void __fastcall PlayerHandler__SwapPlayerRole(PlayerHandler* playerHandler, ePlayerRole playerRole);
+    typedef void __fastcall PlayerHandler__SwapPlayerRole(PlayerHandler* playerHandler, ePlayerRole playerRole, bool arg2, int arg3);
 
     void SwapPlayerRole(ePlayerRole playerRole)
     {
-        Utilities::FindFunction<PlayerHandler__SwapPlayerRole>(0x159E770)(this, playerRole);
+        Utilities::FindFunction<PlayerHandler__SwapPlayerRole>(0x3F8BD0)(this, playerRole, true, 9);
     }
 };
 
@@ -356,15 +338,15 @@ struct PhotonNetwork
     static PhotonNetwork* Instance()
     {
         static PhotonNetwork* ptr = nullptr;
-        if (!ptr) ptr = Utilities::FindClass<PhotonNetwork>(0x2657508);
+        if (!ptr) ptr = Utilities::FindClass<PhotonNetwork>(0x5487C70);
         return ptr;
     }
 };
 
 struct LobbyHandler
 {
-    char pad_0[0x58];
-    eQuickMatchLobbyState lobbyState; // 0x58
+    char pad_0[0x48];
+    eQuickMatchLobbyState lobbyState; // 0x48
 };
 
 struct LevelManager
@@ -377,8 +359,8 @@ struct GameManager
 {
     char pad_0[0x38];
     LobbyHandler* lobbyHandler; // 0x38
-    char pad_1[0x48];
-    LevelManager* levelManager; // 0x88
+    char pad_1[0x50];
+    LevelManager* levelManager; // 0x90
 
     typedef PlayerHandler* __fastcall GameManager__GetPlayerHandler(DWORD64* gameManager, int playerId, bool includeGhost);
     typedef void __fastcall GameManager__SetAwardedPoints(DWORD64* gameManager, int points, bool awardImmediate, bool localOnly);
@@ -386,22 +368,21 @@ struct GameManager
 
     PlayerHandler* GetPlayerHandler(int playerId, bool includeGhost)
     {
-        return Utilities::FindFunction<GameManager__GetPlayerHandler>(0x1482190)((DWORD64*)&pad_0, playerId, includeGhost);
+        return Utilities::FindFunction<GameManager__GetPlayerHandler>(0x3C91060)((DWORD64*)&pad_0, playerId, includeGhost);
     }
 
     void SetAwardedPoints(int points, bool awardImmediate, bool localOnly)
     {
-        Utilities::FindFunction<GameManager__SetAwardedPoints>(0x14827E0)((DWORD64*)&pad_0, points, awardImmediate, localOnly);
+        Utilities::FindFunction<GameManager__SetAwardedPoints>(0x3C91F20)((DWORD64*)&pad_0, points, awardImmediate, localOnly);
     }
 
     static GameManager* Instance()
     {
         static GameManager* ptr = nullptr;
-        if (!ptr) ptr = *(GameManager**)Utilities::FindClass<GameManager>(0x2657708);
+        if (!ptr) ptr = *(GameManager**)Utilities::FindClass<GameManager>(0x5488188);
         return ptr;
     }
 };
 
 typedef void(__fastcall* UnlocksEntryUI__Init)(__int64 a1, __int64 a2, int a3, unsigned int a4, __int64 a5, __int64 a6, UnlockProgress* unlockProgress, __int64 a8);
-typedef void(__fastcall* PlayFabLogin__FlagAsCheater)(__int64 a1, __int64 a2, __int64 a3);
-typedef void ObscuredCheatingDetector__StopDetection();
+typedef void ObscuredCheatingDetector__Dispose();

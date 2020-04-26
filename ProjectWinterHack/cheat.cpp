@@ -9,6 +9,7 @@ UnlocksEntryUI__Init unlocksEntryUIInitOrig;
 
 PhotonNetwork* photonNetwork;
 PlayerHandler* localPlayerHandler = nullptr;
+bool acDisabled = false;
 bool gameStarted = false;
 bool refreshedNameplates = false;
 
@@ -23,18 +24,25 @@ std::time_t lastLoop = 0;
 
 const std::vector<ePlayerRole> availableRoles{
 	ePlayerRole::Innocent,
+	ePlayerRole::ClassicSurvivor,
 	ePlayerRole::Defector,
-	ePlayerRole::Medic,
+	ePlayerRole::Medic_S,
 	ePlayerRole::Soldier,
 	ePlayerRole::Medium,
 	ePlayerRole::Padre,
 	ePlayerRole::Hunter,
+	ePlayerRole::Hacker_S,
+	ePlayerRole::Lumberjack,
+	ePlayerRole::Scientist_S,	
 	ePlayerRole::ClassicTraitor,
-	ePlayerRole::Stitcher,
-	ePlayerRole::Hacker,
+	ePlayerRole::Medic_T,
+	ePlayerRole::Hacker_T,
 	ePlayerRole::Demon,
 	ePlayerRole::Whisperer,
-	ePlayerRole::Yeti
+	ePlayerRole::Sleeper,
+	ePlayerRole::Scientist_T,
+	ePlayerRole::Yeti,
+	ePlayerRole::IdentityThief
 };
 
 
@@ -48,6 +56,14 @@ void ShowCheatStatus(const char* message, bool isCheatOn)
 void __fastcall GameManager_UpdateHook(GameManager* gameManager)
 {
 	gameManagerUpdateOrig(gameManager);
+
+	if (!acDisabled)
+	{
+		ObscuredCheatingDetector__Dispose* DetectorDispose = Utilities::FindFunction<ObscuredCheatingDetector__Dispose>(0x2EBD740);
+		DetectorDispose();
+
+		acDisabled = true;
+	}
 
 	if (gameManager->lobbyHandler->lobbyState != eQuickMatchLobbyState::LS_Loading)
 	{
@@ -63,7 +79,7 @@ void __fastcall GameManager_UpdateHook(GameManager* gameManager)
 
 	if (!gameStarted)
 	{
-		gameManager->SetAwardedPoints(10000, true, false);
+		gameManager->SetAwardedPoints(rand() % 7500 + 2500, true, false);
 	}
 	gameStarted = true;
 
@@ -97,10 +113,11 @@ void __fastcall GameManager_UpdateHook(GameManager* gameManager)
 						playerHandler->hungerScript->currentValue.hiddenValue = 10000.0f;
 					}
 
-					if (playerHandler->hudManager->craftingUI &&
+					if (freeCrafting &&
+						playerHandler->hudManager->craftingUI &&
 						playerHandler->hudManager->craftingUI->craftingEntryUI)
 					{
-						playerHandler->hudManager->craftingUI->craftingEntryUI->canCraft = freeCrafting;
+						playerHandler->hudManager->craftingUI->craftingEntryUI->canCraft = true;
 					}
 					localPlayerHandler = playerHandler;
 				}
@@ -166,7 +183,7 @@ void __fastcall GameManager_UpdateHook(GameManager* gameManager)
 	}
 	if (GetAsyncKeyState(VK_F5) & 1)
 	{
-		if (localPlayerHandler->playerRoleHandler->playerRoleData->playerRole != ePlayerRole::Yeti)
+		if (localPlayerHandler->playerRoleHandler->playerRoleData->playerRole != ePlayerRole::IdentityThief)
 		{
 			std::vector<ePlayerRole>::const_iterator it = std::find(availableRoles.begin(), availableRoles.end(), localPlayerHandler->playerRoleHandler->playerRoleData->playerRole);
 			ePlayerRole newRole = *(++it);
@@ -177,6 +194,7 @@ void __fastcall GameManager_UpdateHook(GameManager* gameManager)
 		{
 			localPlayerHandler->SwapPlayerRole(ePlayerRole::Innocent);
 		}
+		lastLoop = 0;
 	}
 	if (GetAsyncKeyState(VK_H) & 1)
 	{
@@ -211,13 +229,10 @@ void HijackGameLoop()
 	Utilities::AttachDebugConsole();
 #endif
 
-	ObscuredCheatingDetector__StopDetection* StopDetection = Utilities::FindFunction<ObscuredCheatingDetector__StopDetection>(0xC2EED0);
-	StopDetection();
-
-	auto gameManagerUpdatePtr = Utilities::FindFunction<GameManager::GameManager_Update>(0x1482970);
+	auto gameManagerUpdatePtr = Utilities::FindFunction<GameManager::GameManager_Update>(0x3C93510);
 	gameManagerUpdateOrig = (GameManager::GameManager_Update)Utilities::Hook::DetourFunc64((BYTE*)gameManagerUpdatePtr, (BYTE*)GameManager_UpdateHook, 17);
 
-	auto unlocksEntryUIInitPtr = Utilities::FindFunction<UnlocksEntryUI__Init>(0x17EEF50);
+	auto unlocksEntryUIInitPtr = Utilities::FindFunction<UnlocksEntryUI__Init>(0x20C0C50);
 	unlocksEntryUIInitOrig = (UnlocksEntryUI__Init)Utilities::Hook::DetourFunc64((BYTE*)unlocksEntryUIInitPtr, (BYTE*)UnlocksEntryUI_InitHook, 20);
 
 	photonNetwork = PhotonNetwork::Instance();
