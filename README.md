@@ -28,5 +28,5 @@ You can find the most recent releases here:
 https://www.unknowncheats.me/forum/other-games/369940-project-winter-multi-hack-il2cpp.html
 
 ## Compile Yourself
-- Requires Visual Studio 2017 (V141)
+- Requires Visual Studio 2019 (V142)
 - Target x64
