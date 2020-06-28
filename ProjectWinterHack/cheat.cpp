@@ -17,6 +17,7 @@ bool infiniteHealth = false;
 bool infiniteWarmth = false;
 bool infiniteFood = false;
 bool freeCrafting = false;
+bool spBoost = false;
 
 Color32 survivorColor = { 0x6A, 0xCE, 0xFF, 0xFF };
 Color32 traitorColor = { 0xFF, 0x33, 0x33, 0xFF };
@@ -59,7 +60,7 @@ void __fastcall GameManager_UpdateHook(GameManager* gameManager)
 
 	if (!acDisabled)
 	{
-		ObscuredCheatingDetector__Dispose* DetectorDispose = Utilities::FindFunction<ObscuredCheatingDetector__Dispose>(0x2EBD740);
+		ObscuredCheatingDetector__Dispose* DetectorDispose = Utilities::FindFunction<ObscuredCheatingDetector__Dispose>(0x34AB760);
 		DetectorDispose();
 
 		acDisabled = true;
@@ -70,6 +71,11 @@ void __fastcall GameManager_UpdateHook(GameManager* gameManager)
 		if (gameStarted)
 		{
 			gameStarted = false;
+
+			if (spBoost)
+			{
+				gameManager->SetAwardedPoints((rand() % 5000) + 2000, true, false);
+			}
 		}
 		return;
 	}
@@ -77,10 +83,6 @@ void __fastcall GameManager_UpdateHook(GameManager* gameManager)
 	if (!gameManager->levelManager || !gameManager->levelManager->hasSessionStarted)
 		return;
 
-	if (!gameStarted)
-	{
-		gameManager->SetAwardedPoints(rand() % 7500 + 2500, true, false);
-	}
 	gameStarted = true;
 
 	for (int i = 0; i < photonNetwork->networkingPeer->playerList->length; i++)
@@ -196,6 +198,10 @@ void __fastcall GameManager_UpdateHook(GameManager* gameManager)
 		}
 		lastLoop = 0;
 	}
+	if (GetAsyncKeyState(VK_F12) & 1)
+	{
+		spBoost = !spBoost;
+	}
 	if (GetAsyncKeyState(VK_H) & 1)
 	{
 		localPlayerHandler->hudManager->textChatBox->DisplayLocalMessage("Infinite Health: F1");
@@ -229,11 +235,11 @@ void HijackGameLoop()
 	Utilities::AttachDebugConsole();
 #endif
 
-	auto gameManagerUpdatePtr = Utilities::FindFunction<GameManager::GameManager_Update>(0x3C93510);
+	auto gameManagerUpdatePtr = Utilities::FindFunction<GameManager::GameManager_Update>(0x1A4B9B0);
 	gameManagerUpdateOrig = (GameManager::GameManager_Update)Utilities::Hook::DetourFunc64((BYTE*)gameManagerUpdatePtr, (BYTE*)GameManager_UpdateHook, 17);
 
-	auto unlocksEntryUIInitPtr = Utilities::FindFunction<UnlocksEntryUI__Init>(0x20C0C50);
-	unlocksEntryUIInitOrig = (UnlocksEntryUI__Init)Utilities::Hook::DetourFunc64((BYTE*)unlocksEntryUIInitPtr, (BYTE*)UnlocksEntryUI_InitHook, 20);
+	auto unlocksEntryUIInitPtr = Utilities::FindFunction<UnlocksEntryUI__Init>(0x281B9E0);
+	unlocksEntryUIInitOrig = (UnlocksEntryUI__Init)Utilities::Hook::DetourFunc64((BYTE*)unlocksEntryUIInitPtr, (BYTE*)UnlocksEntryUI_InitHook, 19);
 
 	photonNetwork = PhotonNetwork::Instance();
 }

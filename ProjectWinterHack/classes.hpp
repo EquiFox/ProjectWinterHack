@@ -62,12 +62,12 @@ struct Il2CppString
 
     static Il2CppString* New(const char* str)
     {
-        return Utilities::FindFunction<il2cpp_string_new>(0x197200)(str);
+        return Utilities::FindFunction<il2cpp_string_new>(0x08D8E0)(str);
     }
 
     static Il2CppString* Concat(Il2CppString* str0, Il2CppString* str1)
     {
-        return Utilities::FindFunction<Il2CppString__Concat>(0x2001930)(str0, str1);
+        return Utilities::FindFunction<Il2CppString__Concat>(0x79E050)(str0, str1);
     }
 };
 
@@ -172,17 +172,17 @@ struct TextMeshProUGUI
     
     void SetText(Il2CppString* text)
     {		
-        Utilities::FindFunction<TextMeshProUGUI__SetText>(0x7AEBD0)((DWORD64*)&pad_0, text);
+        Utilities::FindFunction<TextMeshProUGUI__SetText>(0x2D02D0)((DWORD64*)&pad_0, text);
     }
 
     void SetFaceColor(Color32 newColor)
     {
-        Utilities::FindFunction<TextMeshProUGUI__SetFaceColor>(0x2C0C5B0)((DWORD64*)&pad_0, newColor);
+        Utilities::FindFunction<TextMeshProUGUI__SetFaceColor>(0xD76870)((DWORD64*)&pad_0, newColor);
     }
 
     void SetAllDirty()
     {
-        Utilities::FindFunction<TextMeshProUGUI__SetAllDirty>(0x1578410)((DWORD64*)&pad_0);
+        Utilities::FindFunction<TextMeshProUGUI__SetAllDirty>(0x59DC40)((DWORD64*)&pad_0);
     }
 };
 
@@ -202,7 +202,7 @@ struct TextChatBox
     void DisplayLocalMessage(const char* message)
     {
         Il2CppString* messageString = Il2CppString::New(message);
-        Utilities::FindFunction<TextChat__DisplayLocalMessage>(0x8522A0)((DWORD64*)&pad_0, messageString);
+        Utilities::FindFunction<TextChat__DisplayLocalMessage>(0x18D8750)((DWORD64*)&pad_0, messageString);
     }
 };
 
@@ -223,8 +223,8 @@ struct Recipe
 
 struct CraftingEntryUI
 {
-    char pad_0[0x88];
-    bool canCraft; // 0x88
+    char pad_0[0x98];
+    bool canCraft; // 0x98
 };
 
 struct CraftingUI
@@ -247,7 +247,8 @@ struct PlayerRoleData
 {
     char pad_0[0x18];
     ePlayerRole playerRole; //0x18
-    bool isTraitorRole; //0x1C
+    char pad_1[0xC];
+    bool isTraitorRole; //0x28
 
     Il2CppString* GetPlayerRoleString()
     {
@@ -309,7 +310,7 @@ struct PlayerHandler
 
     void SwapPlayerRole(ePlayerRole playerRole)
     {
-        Utilities::FindFunction<PlayerHandler__SwapPlayerRole>(0x3F8BD0)(this, playerRole, true, 9);
+        Utilities::FindFunction<PlayerHandler__SwapPlayerRole>(0x1328F60)(this, playerRole, true, 9);
     }
 };
 
@@ -338,7 +339,7 @@ struct PhotonNetwork
     static PhotonNetwork* Instance()
     {
         static PhotonNetwork* ptr = nullptr;
-        if (!ptr) ptr = Utilities::FindClass<PhotonNetwork>(0x5487C70);
+        if (!ptr) ptr = Utilities::FindClass<PhotonNetwork>(0x55E4F08);
         return ptr;
     }
 };
@@ -351,8 +352,8 @@ struct LobbyHandler
 
 struct LevelManager
 {
-    char pad_0[0x6A];
-    bool hasSessionStarted; // 0x6A
+    char pad_0[0x62];
+    bool hasSessionStarted; // 0x62
 };
 
 struct GameManager
@@ -368,18 +369,18 @@ struct GameManager
 
     PlayerHandler* GetPlayerHandler(int playerId, bool includeGhost)
     {
-        return Utilities::FindFunction<GameManager__GetPlayerHandler>(0x3C91060)((DWORD64*)&pad_0, playerId, includeGhost);
+        return Utilities::FindFunction<GameManager__GetPlayerHandler>(0x1A47BC0)((DWORD64*)&pad_0, playerId, includeGhost);
     }
 
     void SetAwardedPoints(int points, bool awardImmediate, bool localOnly)
     {
-        Utilities::FindFunction<GameManager__SetAwardedPoints>(0x3C91F20)((DWORD64*)&pad_0, points, awardImmediate, localOnly);
+        Utilities::FindFunction<GameManager__SetAwardedPoints>(0x1A48AF0)((DWORD64*)&pad_0, points, awardImmediate, localOnly);
     }
 
     static GameManager* Instance()
     {
         static GameManager* ptr = nullptr;
-        if (!ptr) ptr = *(GameManager**)Utilities::FindClass<GameManager>(0x5488188);
+        if (!ptr) ptr = *(GameManager**)Utilities::FindClass<GameManager>(0x55BD480);
         return ptr;
     }
 };
