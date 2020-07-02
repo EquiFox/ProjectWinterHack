@@ -175,23 +175,23 @@ struct TextMeshProUGUI
     char pad_0[0x17C];
     Color32 fontColor; // 0x17C
 
-    typedef void __fastcall TextMeshProUGUI__SetText(DWORD64* textMeshProUGUI, Il2CppString* text);
-    typedef void __fastcall TextMeshProUGUI__SetFaceColor(DWORD64* textMeshProUGUI, Color32 newColor);
-    typedef void __fastcall TextMeshProUGUI__SetAllDirty(DWORD64* textMeshProUGUI);
+    typedef void __fastcall TextMeshProUGUI__SetText(TextMeshProUGUI* textMeshProUGUI, Il2CppString* text);
+    typedef void __fastcall TextMeshProUGUI__SetFaceColor(TextMeshProUGUI* textMeshProUGUI, Color32 newColor);
+    typedef void __fastcall TextMeshProUGUI__SetAllDirty(TextMeshProUGUI* textMeshProUGUI);
     
     void SetText(Il2CppString* text)
     {		
-        Utilities::FindFunction<TextMeshProUGUI__SetText>(Offsets::Methods::TextMeshProUGUI_SetText)((DWORD64*)&pad_0, text);
+        Utilities::FindFunction<TextMeshProUGUI__SetText>(Offsets::Methods::TextMeshProUGUI_SetText)(this, text);
     }
 
     void SetFaceColor(Color32 newColor)
     {
-        Utilities::FindFunction<TextMeshProUGUI__SetFaceColor>(Offsets::Methods::TextMeshProUGUI_SetFaceColor)((DWORD64*)&pad_0, newColor);
+        Utilities::FindFunction<TextMeshProUGUI__SetFaceColor>(Offsets::Methods::TextMeshProUGUI_SetFaceColor)(this, newColor);
     }
 
     void SetAllDirty()
     {
-        Utilities::FindFunction<TextMeshProUGUI__SetAllDirty>(Offsets::Methods::TextMeshProUGUI_SetAllDirty)((DWORD64*)&pad_0);
+        Utilities::FindFunction<TextMeshProUGUI__SetAllDirty>(Offsets::Methods::TextMeshProUGUI_SetAllDirty)(this);
     }
 };
 
@@ -206,12 +206,12 @@ struct TextChatBox
     char pad_0[0xE0];
     Il2CppString* localPlayerName; // 0xE0
 
-    typedef void __fastcall TextChat__DisplayLocalMessage(DWORD64* textChat, Il2CppString* message);
+    typedef void __fastcall TextChat__DisplayLocalMessage(TextChatBox* textChat, Il2CppString* message);
 
     void DisplayLocalMessage(const char* message)
     {
         Il2CppString* messageString = Il2CppString::New(message);
-        Utilities::FindFunction<TextChat__DisplayLocalMessage>(Offsets::Methods::TextChat_DisplayLocalMessage)((DWORD64*)&pad_0, messageString);
+        Utilities::FindFunction<TextChat__DisplayLocalMessage>(Offsets::Methods::TextChat_DisplayLocalMessage)(this, messageString);
     }
 };
 
@@ -380,6 +380,7 @@ struct SocialRatingManager
         obsInt->hiddenValue = value;
 
         Utilities::FindFunction<SocialRatingManager__UpdateSocialRatingOnPlayFab>(Offsets::Methods::SocialRatingManager_UpdateSocialRatingOnPlayFab)(this, *obsInt, playFabId);
+        delete obsInt;
     }
 };
 
@@ -400,18 +401,18 @@ struct GameManager
     char pad_3[0xC0];
     Il2CppString* playFabId; // 0x158
 
-    typedef PlayerHandler* __fastcall GameManager__GetPlayerHandler(DWORD64* gameManager, int playerId, bool includeGhost);
-    typedef void __fastcall GameManager__SetAwardedPoints(DWORD64* gameManager, int points, bool awardImmediate, bool localOnly);
+    typedef PlayerHandler* __fastcall GameManager__GetPlayerHandler(GameManager* gameManager, int playerId, bool includeGhost);
+    typedef void __fastcall GameManager__SetAwardedPoints(GameManager* gameManager, int points, bool awardImmediate, bool localOnly);
     typedef void (__fastcall* GameManager__Update)(GameManager* instance);
 
     PlayerHandler* GetPlayerHandler(int playerId, bool includeGhost)
     {
-        return Utilities::FindFunction<GameManager__GetPlayerHandler>(Offsets::Methods::GameManager_GetPlayerHandler)((DWORD64*)&pad_0, playerId, includeGhost);
+        return Utilities::FindFunction<GameManager__GetPlayerHandler>(Offsets::Methods::GameManager_GetPlayerHandler)(this, playerId, includeGhost);
     }
 
     void SetAwardedPoints(int points, bool awardImmediate, bool localOnly)
     {
-        Utilities::FindFunction<GameManager__SetAwardedPoints>(Offsets::Methods::GameManager_SetAwardedPoints)((DWORD64*)&pad_0, points, awardImmediate, localOnly);
+        Utilities::FindFunction<GameManager__SetAwardedPoints>(Offsets::Methods::GameManager_SetAwardedPoints)(this, points, awardImmediate, localOnly);
     }
 
     static GameManager* Instance()
