@@ -142,6 +142,7 @@
       <PreprocessorDefinitions>NDEBUG;PROJECTWINTERHACK_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -155,6 +156,7 @@
     <ClInclude Include="cheat.hpp" />
     <ClInclude Include="classes.hpp" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="offsets.hpp" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="utils.hpp" />
   </ItemGroup>

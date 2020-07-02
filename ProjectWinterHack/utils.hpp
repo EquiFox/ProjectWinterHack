@@ -1,40 +1,65 @@
 #pragma once
+#include <Psapi.h>
 
 #define VK_H 0x48
 
+#define INRANGE(x,a,b)    (x >= a && x <= b) 
+#define getBits( x )    (INRANGE((x&(~0x20)),'A','F') ? ((x&(~0x20)) - 'A' + 0xa) : (INRANGE(x,'0','9') ? x - '0' : 0))
+#define getByte( x )    (getBits(x[0]) << 4 | getBits(x[1]))
+
 namespace Utilities
 {
-    DWORD64 moduleBase = 0;
-
-    bool AttachDebugConsole(void)
+    namespace Memory
     {
-        FreeConsole();
-        if (!AllocConsole())
-            return false;
+        DWORD64 moduleBase = (DWORD64)GetModuleHandle(L"GameAssembly.dll");
 
-        FILE* pConOutput = nullptr;
-        return (freopen_s(&pConOutput, "CONOUT$", "w", stdout) == 0);
-    }
-
-    DWORD64 GetModuleBase()
-    {
-        if (moduleBase == 0)
+        DWORD64 CalcRelativeOffset(DWORD64 address)
         {
-            moduleBase = (DWORD64)GetModuleHandle(L"GameAssembly.dll");
+            if (address < moduleBase)
+                address += moduleBase;
+
+            return *(int32_t*)address + (address + 4) - moduleBase;
         }
-        return moduleBase;
-    }
 
-    template<class T>
-    T* FindClass(DWORD64 offset)
-    {
-        return *(T**)(*(DWORD64*)(GetModuleBase() + offset) + 0xB8);
-    }
+        DWORD64 FindPattern(const char* pattern)
+        {
+            const char* pat = pattern;
+            DWORD64 firstMatch = 0;
+            DWORD64 rangeStart = moduleBase;
+            MODULEINFO miModInfo;
+            GetModuleInformation(GetCurrentProcess(), (HMODULE)rangeStart, &miModInfo, sizeof(MODULEINFO));
+            DWORD64 rangeEnd = rangeStart + miModInfo.SizeOfImage;
 
-    template<class T>
-    T* FindFunction(DWORD64 offset)
-    {
-        return (T*)(GetModuleBase() + offset);
+            for (DWORD64 pCur = rangeStart; pCur < rangeEnd; pCur++)
+            {
+                if (!*pat)
+                    return firstMatch - moduleBase;
+
+                if (*(PBYTE)pat == '\?' || *(BYTE*)pCur == getByte(pat))
+                {
+                    if (!firstMatch)
+                        firstMatch = pCur;
+
+                    if (!pat[2])
+                    {
+                        if (pattern[0] == 'E' && (pattern[1] == '8' || pattern[1] == '9'))
+                            return CalcRelativeOffset(firstMatch + 1);
+                        return firstMatch - moduleBase;
+                    }
+
+                    if (*(PWORD)pat == '\?\?' || *(PBYTE)pat != '\?')
+                        pat += 3;
+                    else
+                        pat += 2;
+                }
+                else
+                {
+                    pat = pattern;
+                    firstMatch = 0;
+                }
+            }
+            return NULL;
+        }
     }
 
     namespace Hook
@@ -109,5 +134,28 @@ namespace Utilities
             // Return a pointer to the original code.
             return presenthook64->original_code;
         }
+    }
+
+
+    bool AttachDebugConsole(void)
+    {
+        FreeConsole();
+        if (!AllocConsole())
+            return false;
+
+        FILE* pConOutput = nullptr;
+        return (freopen_s(&pConOutput, "CONOUT$", "w", stdout) == 0);
+    }
+
+    template<class T>
+    T* FindClass(DWORD64 offset)
+    {
+        return *(T**)(*(DWORD64*)(Memory::moduleBase + offset) + 0xB8);
+    }
+
+    template<class T>
+    T* FindFunction(DWORD64 offset)
+    {
+        return (T*)(Memory::moduleBase + offset);
     }
 }

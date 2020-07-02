@@ -1,10 +1,11 @@
 #include "pch.h"
 #include "utils.hpp"
+#include "offsets.hpp"
 #include "classes.hpp"
 #include <vector>
 #include <ctime>
 
-GameManager::GameManager_Update gameManagerUpdateOrig;
+GameManager::GameManager__Update gameManagerUpdateOrig;
 UnlocksEntryUI__Init unlocksEntryUIInitOrig;
 
 PhotonNetwork* photonNetwork;
@@ -60,10 +61,15 @@ void __fastcall GameManager_UpdateHook(GameManager* gameManager)
 
 	if (!acDisabled)
 	{
-		ObscuredCheatingDetector__Dispose* DetectorDispose = Utilities::FindFunction<ObscuredCheatingDetector__Dispose>(0x34AB760);
+		ObscuredCheatingDetector__Dispose* DetectorDispose = Utilities::FindFunction<ObscuredCheatingDetector__Dispose>(Offsets::Methods::ObscuredCheatingDetector_Dispose);
 		DetectorDispose();
 
 		acDisabled = true;
+	}
+
+	if (GetAsyncKeyState(VK_F11) & 1)
+	{
+		gameManager->socialRatingManager->UpdateSocialRatingOnPlayFab(125, gameManager->playFabId);
 	}
 
 	if (gameManager->lobbyHandler->lobbyState != eQuickMatchLobbyState::LS_Loading)
@@ -234,11 +240,12 @@ void HijackGameLoop()
 #if _DEBUG
 	Utilities::AttachDebugConsole();
 #endif
+	Offsets::Initialize();
 
-	auto gameManagerUpdatePtr = Utilities::FindFunction<GameManager::GameManager_Update>(0x1A4B9B0);
-	gameManagerUpdateOrig = (GameManager::GameManager_Update)Utilities::Hook::DetourFunc64((BYTE*)gameManagerUpdatePtr, (BYTE*)GameManager_UpdateHook, 17);
+	auto gameManagerUpdatePtr = Utilities::FindFunction<GameManager::GameManager__Update>(Offsets::Methods::GameManager_Update);
+	gameManagerUpdateOrig = (GameManager::GameManager__Update)Utilities::Hook::DetourFunc64((BYTE*)gameManagerUpdatePtr, (BYTE*)GameManager_UpdateHook, 17);
 
-	auto unlocksEntryUIInitPtr = Utilities::FindFunction<UnlocksEntryUI__Init>(0x281B9E0);
+	auto unlocksEntryUIInitPtr = Utilities::FindFunction<UnlocksEntryUI__Init>(Offsets::Methods::UnlocksEntryUI_Init);
 	unlocksEntryUIInitOrig = (UnlocksEntryUI__Init)Utilities::Hook::DetourFunc64((BYTE*)unlocksEntryUIInitPtr, (BYTE*)UnlocksEntryUI_InitHook, 19);
 
 	photonNetwork = PhotonNetwork::Instance();
