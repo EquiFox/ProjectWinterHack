@@ -74,7 +74,7 @@ void __fastcall GameManager_UpdateHook(GameManager* gameManager)
 	if (forceMenuTextUpdate)
 	{
 		char menuText[150];
-		sprintf_s(menuText, "<color=lime><b>Foxy Multi-Hack</b>\t\t\tDLC Enabled (F10): %s  |  Golden Thumbs Up (F11)</color>", (gameManager->dlcManager->hasSupernaturalDlc ? "True" : "False"), (spBoost ? "True" : "False"));
+		sprintf_s(menuText, "<color=lime><b>Foxy Multi-Hack</b>\t\t\tDLC Enabled (F10): %s  |  Press H while in match for menu</color>", (gameManager->dlcManager->hasSupernaturalDlc ? "True" : "False"));
 		gameManager->uiManager->playMenuController->versionText->ChangeText(menuText);
 
 		forceMenuTextUpdate = false;
@@ -88,14 +88,12 @@ void __fastcall GameManager_UpdateHook(GameManager* gameManager)
 
 	if (GetAsyncKeyState(VK_F11) & 1)
 	{
-		gameManager->socialRatingManager->UpdateSocialRatingOnPlayFab(125, gameManager->playFabId);
-		forceMenuTextUpdate = true;
+		gameManager->socialRatingManager->UpdateSocialRatingOnPlayFab(124, gameManager->playFabId);
 	}
 
 	if (GetAsyncKeyState(VK_F12) & 1)
 	{
 		spBoost = !spBoost;
-		forceMenuTextUpdate = true;
 	}
 
 	if (gameManager->lobbyHandler->lobbyState != eQuickMatchLobbyState::LS_Loading)
