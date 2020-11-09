@@ -20,7 +20,7 @@ In most modern Unity games, the original C# Mono code is converted to C++ using 
 * Progression Rewards Fully Unlocked
 * Multiple Camera Zoom Levels - NEW
 * DLC Unlocker (Press F10 in Main Menu) - NEW
-* Max Social Rating Level **(Gold Thumbs Up | Press F11 in Main Menu)**
+* Max Social Rating Level **(Gold Thumbs Up | Ban Risk | Press F11 in Main Menu)**
 * Every game rewards you with an high SP count **(Disabled by Default | Ban Risk | Press F12 to Enable)**
 
 ## Usage
